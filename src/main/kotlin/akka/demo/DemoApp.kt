@@ -19,7 +19,7 @@ import org.jboss.netty.util.internal.DeadLockProofWorker.start
 class DemoApp internal constructor() : AllDirectives() {
 
     init {
-        val system = ActorSystem.create("akkajobcluster")
+        val system = ActorSystem.create("appka")
 
         val mat = ActorMaterializer.create(system)
         val cluster = Cluster.get(system)
@@ -36,8 +36,8 @@ class DemoApp internal constructor() : AllDirectives() {
                 ClusterEvent.initialStateAsEvents(),
                 ClusterEvent.ClusterDomainEvent::class.java)
 
-        // Http.get(system).bindAndHandle(complete("Hello world").flow(system, mat),
-        //        ConnectHttp.toHost("0.0.0.0", 8080), mat)
+         Http.get(system).bindAndHandle(complete("Hello world").flow(system, mat),
+                ConnectHttp.toHost("0.0.0.0", 8080), mat)
 
         cluster.registerOnMemberUp { system.log().info("Cluster member is up!") }
     }

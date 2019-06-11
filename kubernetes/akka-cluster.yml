@@ -3,46 +3,46 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: "akkajobcluster"
-  name: "akkajobcluster"
+    app: "appka"
+  name: "appka"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: akkajobcluster
+      app: appka
 
   template:
     metadata:
       labels:
-        app: akkajobcluster
-        actorSystemName: akkajobcluster
+        app: appka
+        actorSystemName: appka
     spec:
       containers:
-      - name: akkajobcluster
-        image: akka-jobcluster-demo-1.0
-        imagePullPolicy: Never
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8558
-        livenessProbe:
-          tcpSocket:
-            port: 8558
-        ports:
-        # akka remoting
-        - name: remoting
-          containerPort: 2552
-          protocol: TCP
-        # akka-management and bootstrap
-        - name: management
-          containerPort: 8558
-          protocol: TCP
-#namespace
-        env:
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
+        - name: appka
+          image: akka-jobcluster-demo-1.0
+          imagePullPolicy: Never
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8558
+          livenessProbe:
+            tcpSocket:
+              port: 8558
+          ports:
+            # akka remoting
+            - name: remoting
+              containerPort: 2552
+              protocol: TCP
+            # akka-management and bootstrap
+            - name: management
+              containerPort: 8558
+              protocol: TCP
+          #namespace
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
 #namespace
 
 ---
@@ -50,7 +50,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    appName: "akkajobcluster"
+    appName: "appka"
   name: "appka-internal"
 spec:
   ports:
@@ -63,7 +63,7 @@ spec:
       protocol: TCP
       targetPort: 2552
   selector:
-    app: "akkajobcluster"
+    app: "appka"
 #  clusterIP: None
 #headless
 
@@ -73,8 +73,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    appName: "akkajobcluster"
-  name: "akkajobcluster"
+    appName: "appka"
+  name: "appka"
 spec:
   ports:
     - name: http
@@ -86,7 +86,7 @@ spec:
       protocol: TCP
       targetPort: 8558
   selector:
-    app: "akkajobcluster"
+    app: "appka"
   type: LoadBalancer
 
 
@@ -97,19 +97,19 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: pod-reader
 rules:
-- apiGroups: [""] # "" indicates the core API group
-  resources: ["pods"]
-  verbs: ["get", "watch", "list"]
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: read-pods
 subjects:
-# Note the `name` line below. The first default refers to the namespace. The second refers to the service account name.
-# For instance, `name: system:serviceaccount:myns:default` would refer to the default service account in namespace `myns`
-- kind: User
-  name: system:serviceaccount:default:default
+  # Note the `name` line below. The first default refers to the namespace. The second refers to the service account name.
+  # For instance, `name: system:serviceaccount:myns:default` would refer to the default service account in namespace `myns`
+  - kind: User
+    name: system:serviceaccount:default:default
 roleRef:
   kind: Role
   name: pod-reader
