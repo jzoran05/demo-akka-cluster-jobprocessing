@@ -3,22 +3,22 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: "appka"
-  name: "appka"
+    app: "akkajobcluster"
+  name: "akkajobcluster"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: appka
+      app: akkajobcluster
 
   template:
     metadata:
       labels:
-        app: appka
-        actorSystemName: appka
+        app: akkajobcluster
+        actorSystemName: akkajobcluster
     spec:
       containers:
-        - name: appka
+        - name: akkajobcluster
           image: akka-jobcluster-demo-1.0
           imagePullPolicy: Never
           readinessProbe:
@@ -50,8 +50,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    appName: "appka"
-  name: "appka-internal"
+    appName: "akkajobcluster"
+  name: "akkajobcluster-internal"
 spec:
   ports:
     - name: management
@@ -63,7 +63,7 @@ spec:
       protocol: TCP
       targetPort: 2552
   selector:
-    app: "appka"
+    app: "akkajobcluster"
 #  clusterIP: None
 #headless
 
@@ -73,8 +73,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    appName: "appka"
-  name: "appka"
+    appName: "akkajobcluster"
+  name: "akkajobcluster"
 spec:
   ports:
     - name: http
@@ -86,7 +86,7 @@ spec:
       protocol: TCP
       targetPort: 8558
   selector:
-    app: "appka"
+    app: "akkajobcluster"
   type: LoadBalancer
 
 
