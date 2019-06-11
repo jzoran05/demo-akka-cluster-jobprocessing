@@ -1,0 +1,56 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'application'
+    id 'com.bmuschko.docker-java-application' version '4.8.0'
+}
+
+group 'demo.akka.kotlin'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+def akkaVersion = '2.5.22'
+def akkaManagementVersion = '1.0.1'
+
+dependencies {
+    compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: akkaVersion
+    compile group: 'com.typesafe.akka', name: 'akka-cluster_2.12', version: akkaVersion
+    compile group: 'com.typesafe.akka', name: 'akka-slf4j_2.12', version: akkaVersion
+    compile group: 'com.typesafe.akka', name: 'akka-discovery_2.12', version: akkaVersion
+
+    //compile group: 'com.lightbend.akka.management', name: 'akka-management-cluster-bootstrap_2.12', version: '0.20.0'
+    //compile group: 'com.lightbend.akka.discovery', name: 'akka-discovery-kubernetes-api_2.12', version: '0.20.0'
+    compile group: 'com.lightbend.akka.management', name: 'akka-management_2.12', version: akkaManagementVersion
+    compile group: 'com.lightbend.akka.management', name: 'akka-management-cluster-bootstrap_2.12', version: akkaManagementVersion
+    compile group: 'com.lightbend.akka.management', name: 'akka-management-cluster-http_2.12', version: akkaManagementVersion
+    compile group: 'com.lightbend.akka.discovery', name: 'akka-discovery-kubernetes-api_2.12', version: akkaManagementVersion
+
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+application {
+    mainClassName = 'akka.demo.DemoApp'
+}
+
+jar {
+    manifest { attributes "Main-Class": "akka.demo.DemoApp"  }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }  }
+}
+
+docker {
+    javaApplication {
+        baseImage = 'openjdk:8-jdk-alpine-curl'
+        ports = [8080, 8558, 2552]
+        tag = 'akka-jobcluster-demo-1.0'
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
