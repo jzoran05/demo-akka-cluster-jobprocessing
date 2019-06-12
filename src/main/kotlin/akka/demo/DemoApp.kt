@@ -14,17 +14,14 @@ import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.javadsl.AkkaManagement
 import akka.stream.ActorMaterializer
 import akka.stream.Materializer
-import org.jboss.netty.util.internal.DeadLockProofWorker.start
 
-class DemoApp internal constructor() : AllDirectives() {
+class DemoApp  {
 
     init {
-        val system = ActorSystem.create("appka")
-
-        val mat = ActorMaterializer.create(system)
+        val system = ActorSystem.create("akkajobcluster")
         val cluster = Cluster.get(system)
 
-        system.log().info("Started [" + system + "], cluster.selfAddress = " + cluster.selfAddress() + ")")
+        system.log().info("Started [$system], cluster.selfAddress = $cluster.selfAddress()")
 
         //#start-akka-management
         AkkaManagement.get(system).start()
@@ -35,9 +32,6 @@ class DemoApp internal constructor() : AllDirectives() {
         cluster.subscribe(system.actorOf(Props.create(ClusterWatcher::class.java)),
                 ClusterEvent.initialStateAsEvents(),
                 ClusterEvent.ClusterDomainEvent::class.java)
-
-         Http.get(system).bindAndHandle(complete("Hello world").flow(system, mat),
-                ConnectHttp.toHost("0.0.0.0", 8080), mat)
 
         cluster.registerOnMemberUp { system.log().info("Cluster member is up!") }
     }
