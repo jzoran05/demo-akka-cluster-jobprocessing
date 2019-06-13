@@ -1,5 +1,6 @@
-package akka.demo
+package akka.demo.spring
 
+import akka.demo.spring.Greeting
 import org.springframework.web.bind.annotation.GetMapping
 import java.util.concurrent.atomic.AtomicLong
 import org.springframework.web.bind.annotation.RequestParam

@@ -1,5 +1,4 @@
 
-
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.31'
     id 'application'
@@ -18,7 +17,7 @@ repositories {
 
 def akkaVersion = '2.5.22'
 def akkaManagementVersion = '1.0.1'
-def mainClass = 'akka.demo.BlogApplication'
+def mainClass = 'akka.demo.spring.AkkaSpringApplication'
 
 dependencies {
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: akkaVersion
