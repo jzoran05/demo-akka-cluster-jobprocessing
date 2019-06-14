@@ -16,4 +16,8 @@ GitHub repo: akka-cluster-sample-distributedjob
 - Can Akka cluster partitioning (Partition points - actor system partitioned into actor subtrees located on different nodes)  
 
 ## History (newer on top)
-- Added Springboot as an main entry point Actor host. Idea is to expose REST API and interact with Actors within the service 
+- Add Actor which 'listens' to Kafka topic for Commands/Events
+  * It seems that Alpakka has an implementation of an Kafka Consumer Actor (not clear if that is only supporting Akka streams output)
+  * Here is also an article describing the approach (but is bit old): https://medium.com/dive-in-scala/communicating-with-kafka-using-akka-actors-ce4af02482c6    
+- Add Springboot as an main entry point Actor host. Idea is to expose REST API and interact with Actors within the service
+  * This is not going to work :) - Spring boot has conflicts with Akka Management and Akka Cluster
